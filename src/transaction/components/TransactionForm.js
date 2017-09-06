@@ -8,13 +8,8 @@ import * as TransactionActions from '../actions';
 
 export class TransactionForm extends Component {
 
-    constructor() {
-        super();
-    }
-
-    didComponentMount() {
+    componentDidMount() {
         this.isEditing = !!this.props.match.params.id;
-        console.log(this.props);
     }
 
     shouldComponentUpdate() {
@@ -48,7 +43,7 @@ export class TransactionForm extends Component {
             description: ''
         };
 
-        if (this.props.match.params.id) {
+        if (this.isEditing) {
             let transaction = this.props.transactions.list.find(item => item.id === +this.props.match.params.id);
             defaultValues = {
                 ...transaction,
@@ -58,12 +53,11 @@ export class TransactionForm extends Component {
 
         return (
             <div className="transactionForm">
-                <Link to="/">Back</Link>
                 <form onSubmit={e => this.addTransaction(e)}>
                     <input type="hidden" ref="id" defaultValue={defaultValues.id} />
                     <div>
                         <label>Amount:<br/></label>
-                        <input type="number" ref="amount" placeholder="0" defaultValue={defaultValues.amount}/>
+                        <input type="number" ref="amount" placeholder="0" defaultValue={defaultValues.amount}/> $
                     </div>
                     <div>
                         <input type="text" ref="description" placeholder="Description" defaultValue={defaultValues.description}/>

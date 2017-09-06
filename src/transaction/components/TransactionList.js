@@ -1,6 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import Transaction from './Transaction';
 import * as TransactionActions from '../actions';
 
@@ -13,10 +14,11 @@ const TransactionList = ({ transactions, categories, remove }) => {
 
     return (
         <div>
+
             <nav>
-                <a href="/">All</a>
-                <a href="/expenses">Expenses</a>
-                <a href="/income">Income</a>
+                <NavLink to="/transactions">All</NavLink>
+                <NavLink to="/transactions/filter=expenses">Expenses</NavLink>
+                <NavLink to="/transactions/filter=income">Income</NavLink>
             </nav>
             {transactions.list.map(item => (
                 <Transaction key={item.id} item={item} actions={{ remove }} categories={catListById} />

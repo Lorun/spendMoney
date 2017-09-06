@@ -1,0 +1,42 @@
+.navigation {
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #eee;
+
+	display: flex;
+	flex-wrap: nowrap;
+}
+
+.navigation-btn {
+	position: relative;
+	display: inline-block;
+	line-height: 3em;
+	text-align: center;
+	color: #917371;
+	font-weight: bold;
+	text-decoration: none;
+	font-size: 0.875em;
+	padding: 0 1em;
+	flex-basis: 50%;
+}
+
+.navigation-btn--add {
+	background-color: #ff6b62;
+	color: #fff;
+	flex-basis: auto;
+}
+
+.navigation-btn.is-active {
+	color: #ff6b62;
+}
+.navigation-btn.is-active:before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 2px;
+	background-color: #ff6b62;
+}

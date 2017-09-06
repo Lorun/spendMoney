@@ -1,0 +1,39 @@
+.transaction {
+	border-bottom: 1px solid #eee;
+	padding: 1em;
+}
+
+.transaction-amount {
+	float: right;
+	font-size: 1.25em;
+	color: #ff6b62;
+}
+
+.transaction-category {
+	font-weight: bold;
+	margin-bottom: 0.25em;
+	margin-top: 0.25em;
+}
+
+.transaction-description {
+	font-size: 0.875em;
+	color: #777;
+}
+
+.transaction-info {
+	font-size: 0.75em;
+	padding-top: 0.5em;
+}
+
+.transaction-date {
+	display: inline-block;
+	color: #9f9394;
+	margin-top: 0.375em;
+}
+
+.transaction-buttons {
+	float: right;
+}
+.transaction-buttons .btn {
+	margin-left: 0.25em;
+}
