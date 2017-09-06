@@ -1,11 +1,9 @@
 import * as t from './actionTypes';
 
-let idCounter = 1000;
-
-export const add = ({ amount, date, description, category }) => ({
+export const add = ({ id, amount, date, description, category }) => ({
     type: t.ADD,
     payload: {
-        id: ++idCounter,
+        id,
         amount,
         date,
         description,
@@ -16,4 +14,8 @@ export const add = ({ amount, date, description, category }) => ({
 export const remove = id => ({
     type: t.REMOVE,
     id
+});
+
+export const incrementId = () => ({
+    type: t.INCREMENT_ID
 });

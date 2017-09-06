@@ -11,16 +11,29 @@ const ACTION_HANDLERS = {
     [t.REMOVE]: (state, action) => ({
         ...state,
         list: state.list.filter(item => item.id !== action.id)
-    }),
-    [t.INCREMENT_ID]: (state, action) => ({
-        ...state,
-        lastId: state.lastId + 1
     })
 };
 
 const initialState = {
-    list: [],
-    lastId: 1000,
+    list: [
+        {
+            id: 1,
+            name: 'Food'
+        },
+        {
+            id: 2,
+            name: 'Entertainment'
+        },
+        {
+            id: 3,
+            name: 'Shopping'
+        },
+        {
+            id: 4,
+            name: 'Travel'
+        }
+    ],
+    lastId: 4,
 };
 
 export default (state = initialState, action) => {
