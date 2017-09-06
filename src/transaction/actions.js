@@ -13,7 +13,7 @@ export const add = ({ amount, date, description, category }) => ({
     }
 });
 
-export const del = id => ({
-    type: t.DELETE,
+export const remove = id => ({
+    type: t.REMOVE,
     id
 });

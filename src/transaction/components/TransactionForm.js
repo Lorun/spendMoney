@@ -1,7 +1,6 @@
 import React from 'react';
 
-// component part
-const Transaction = ({ item, actions }) => {
+const TransactionForm = ({ item, actions }) => {
     const { id, amount, date, description, category } = item;
     return(
         <div className="transaction">
@@ -12,4 +11,4 @@ const Transaction = ({ item, actions }) => {
     );
 }
 
-export default Transaction;
+export default TransactionForm;

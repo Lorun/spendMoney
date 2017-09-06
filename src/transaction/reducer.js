@@ -10,7 +10,7 @@ const ACTION_HANDLERS = {
             ]
         }
     ),
-    [t.DELETE]: (state, action) => (
+    [t.REMOVE]: (state, action) => (
         {
             ...state,
             list: state.list.filter(item => item.id !== action.id)

@@ -1,3 +1,3 @@
 export const ADD = 'transaction/ADD';
-export const DELETE = 'transaction/DELETE';
+export const REMOVE = 'transaction/REMOVE';
 export const EDIT = 'transaction/EDIT';
