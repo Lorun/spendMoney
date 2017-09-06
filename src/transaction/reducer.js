@@ -3,10 +3,10 @@ import * as t from './actionTypes';
 const ACTION_HANDLERS = {
     [t.ADD]: (state, action) => ({
         ...state,
-        list: [
-            action.payload,
-            ...state.list
-        ]
+        list: {
+            ...state.list,
+            [action.payload.id]: action.payload
+        }
     }),
     [t.REMOVE]: (state, action) => ({
         ...state,
@@ -19,7 +19,7 @@ const ACTION_HANDLERS = {
 };
 
 const initialState = {
-    list: [],
+    list: {},
     lastId: 1000,
 };
 

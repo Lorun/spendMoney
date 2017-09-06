@@ -1,22 +1,24 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import * as TransactionActions from '../actions';
 
+import './transactionForm.css';
+
 
 export class TransactionForm extends Component {
 
-    componentDidMount() {
-        this.isEditing = !!this.props.match.params.id;
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isEditing: !!props.match.params.id,
+            transactionType: 1
+        };
     }
 
-    shouldComponentUpdate() {
-        return false;
-    }
-
-    addTransaction(e) {
+    onSubmit(e){
         e.preventDefault();
         const { id, amount, date, description, category } = this.refs;
 
@@ -32,6 +34,10 @@ export class TransactionForm extends Component {
         }
     }
 
+    addTransaction(e) {
+
+    }
+
     render() {
         const lastId = this.props.transactions.lastId;
         const categories = this.props.categories.list;
@@ -43,17 +49,18 @@ export class TransactionForm extends Component {
             description: ''
         };
 
-        if (this.isEditing) {
-            let transaction = this.props.transactions.list.find(item => item.id === +this.props.match.params.id);
+        if (this.state.isEditing) {
+            let transaction = this.props.transactions.list[this.props.match.params.id];
             defaultValues = {
                 ...transaction,
                 date: moment(transaction.date, 'x').format('DD.MM.YYYY'),
             };
         }
 
+
         return (
             <div className="transactionForm">
-                <form onSubmit={e => this.addTransaction(e)}>
+                <form onSubmit={e => this.onSubmit(e)}>
                     <input type="hidden" ref="id" defaultValue={defaultValues.id} />
                     <div>
                         <label>Amount:<br/></label>
@@ -70,7 +77,7 @@ export class TransactionForm extends Component {
                             {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                         </select>
                     </div>
-                    <button type="submit">Add</button>
+                    <button type="submit" className="btn">{this.state.isEditing ? 'Edit' : 'Add'}</button>
                 </form>
             </div>
         );

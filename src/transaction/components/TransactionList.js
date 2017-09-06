@@ -20,9 +20,12 @@ const TransactionList = ({ transactions, categories, remove }) => {
                 <NavLink to="/transactions/filter=expenses">Expenses</NavLink>
                 <NavLink to="/transactions/filter=income">Income</NavLink>
             </nav>
-            {transactions.list.map(item => (
-                <Transaction key={item.id} item={item} actions={{ remove }} categories={catListById} />
-            ))}
+            {Object.keys(transactions.list).map(id => {
+                let item = transactions.list[id];
+                return (
+                    <Transaction key={item.id} item={item} actions={{ remove }} categories={catListById} />
+                )
+            })}
         </div>
     )
 };
