@@ -6,9 +6,10 @@ import './transaction.css';
 
 // component part
 export const Transaction = ({ item, categories, actions }) => {
-    const { id, amount, date, description, category } = item;
+    const { id, transaction_type, amount, date, description, category } = item;
+    const className = transaction_type === 1 ? 'transaction transaction--expenses' : 'transaction transaction--income';
     return(
-        <div className="transaction">
+        <div className={className}>
             <div className="transaction-amount">{ amount }</div>
             <div className="transaction-category">{ categories[category] }</div>
             <div className="transaction-description">{ description }</div>

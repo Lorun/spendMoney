@@ -8,6 +8,13 @@ const ACTION_HANDLERS = {
             [action.payload.id]: action.payload
         }
     }),
+    [t.EDIT]: (state, action) => ({
+        ...state,
+        list: {
+            ...state.list,
+            [action.payload.id]: action.payload
+        }
+    }),
     [t.REMOVE]: (state, action) => ({
         ...state,
         list: state.list.filter(item => item.id !== action.id)

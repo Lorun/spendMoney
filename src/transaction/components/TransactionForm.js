@@ -6,74 +6,102 @@ import * as TransactionActions from '../actions';
 
 import './transactionForm.css';
 
+/* Clean the typed value */
+const cleanValue = (value) => ((isNaN(+value) || value === '') ? value : +value);
 
 export class TransactionForm extends Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {
-            isEditing: !!props.match.params.id,
-            transactionType: 1
-        };
+
+        this.state = this.getInitialState();
+
+        this.handleChange = this.handleChange.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+    }
+
+    getInitialState() {
+        const isEditing = !!this.props.match.params.id && this.props.transactions.list[this.props.match.params.id];
+        const currentId = isEditing ? this.props.match.params.id : this.props.transactions.lastId + 1;
+        const values = isEditing
+            ? {
+                ...this.props.transactions.list[currentId],
+                date: moment(this.props.transactions.list[currentId].date, 'x').format('DD.MM.YYYY')
+            }
+            : {
+                id: currentId,
+                transaction_type: 1,
+                amount: 0,
+                date: moment().format('DD.MM.YYYY'),
+                category: 0,
+                description: ''
+            };
+
+        return {
+            isEditing,
+            values
+        }
+    }
+
+    handleChange(event) {
+        const target = event.target;
+
+        if (target.validity.valid) {
+            this.setState(prevState => ({
+                values: {
+                    ...prevState.values,
+                    [target.name]: cleanValue(target.value)
+                }
+            }));
+        }
     }
 
     onSubmit(e){
         e.preventDefault();
-        const { id, amount, date, description, category } = this.refs;
+        const values = {
+            ...this.state.values,
+            date: moment(this.state.values.date, 'DD.MM.YYYY').format('x')
+        };
 
-        if (amount.value !== 0) {
-            this.props.add({
-                id: +id.value,
-                amount: +amount.value,
-                date: moment(date.value, 'DD.MM.YYYY').format('x'),
-                description: description.value,
-                category: +category.value
-            });
-            this.props.incrementId();
+        if (values.amount !== 0) {
+            this.isEditing ? this.addTransaction(values) : this.editTransaction(values);
         }
     }
 
-    addTransaction(e) {
+    addTransaction(values) {
+        this.props.add(values);
+        this.props.incrementId();
+        this.setState(this.getInitialState())
+    }
 
+    editTransaction(values) {
+        this.props.edit(values);
+        this.props.history.push('/transactions');
     }
 
     render() {
-        const lastId = this.props.transactions.lastId;
         const categories = this.props.categories.list;
-        let defaultValues = {
-            id: lastId + 1,
-            amount: 0,
-            date: moment().format('DD.MM.YYYY'),
-            category: 0,
-            description: ''
-        };
-
-        if (this.state.isEditing) {
-            let transaction = this.props.transactions.list[this.props.match.params.id];
-            defaultValues = {
-                ...transaction,
-                date: moment(transaction.date, 'x').format('DD.MM.YYYY'),
-            };
-        }
-
 
         return (
             <div className="transactionForm">
-                <form onSubmit={e => this.onSubmit(e)}>
-                    <input type="hidden" ref="id" defaultValue={defaultValues.id} />
+                <form onSubmit={this.onSubmit}>
+                    <input type="hidden" name="id" value={this.state.values.id} />
                     <div>
-                        <label>Amount:<br/></label>
-                        <input type="number" ref="amount" placeholder="0" defaultValue={defaultValues.amount}/> $
+                        <input type="radio" name="transaction_type" value="1" onChange={this.handleChange} checked={this.state.values.transaction_type === 1} />
+                        <input type="radio" name="transaction_type" value="2" onChange={this.handleChange} checked={this.state.values.transaction_type === 2} />
                     </div>
                     <div>
-                        <input type="text" ref="description" placeholder="Description" defaultValue={defaultValues.description}/>
+                        <input type="text" pattern="[0-9]*" name="amount" placeholder="0" value={this.state.values.amount} onChange={this.handleChange} /> $
                     </div>
                     <div>
-                        <input type="text" ref="date" defaultValue={defaultValues.date}/>
+                        <input type="text" name="description" placeholder="Description" value={this.state.values.description} onChange={this.handleChange} />
                     </div>
                     <div>
-                        <select ref="category">
+                        <input type="text" name="date" value={this.state.values.date} onChange={this.handleChange} />
+                    </div>
+                    <div>
+                        <select name="category" onChange={this.handleChange} defaultValue={this.state.values.category}>
                             {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                         </select>
                     </div>

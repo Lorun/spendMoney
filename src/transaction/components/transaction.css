@@ -3,6 +3,14 @@
 	padding: 1em;
 }
 
+.transaction--income .transaction-amount {
+    color: #28c356;
+}
+
+.transaction--expenses .transaction-amount:before {
+    content: '–';
+}
+
 .transaction-amount {
 	float: right;
 	font-size: 1.25em;
