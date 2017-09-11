@@ -451,6 +451,10 @@ template {
 }
 
 
+* {
+    box-sizing: border-box;
+}
+
 .common {
     padding-bottom: 3em;
 }
