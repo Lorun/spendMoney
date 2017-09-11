@@ -3,6 +3,7 @@ import { createConnection } from '../../utils';
 import { NavLink } from 'react-router-dom';
 import Transaction from './Transaction';
 import * as TransactionActions from '../actions';
+import FilteredTransactionList from '../selectors/filtered_transactions';
 
 
 // component part

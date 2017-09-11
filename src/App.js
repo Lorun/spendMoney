@@ -16,7 +16,7 @@ class App extends Component {
         return (
             <Router history={history}>
                 <div className="common">
-                    <Header />
+                    {/*<Header />*/}
 
                     <Route exact path="/" component={TransactionList} />
                     <Route exact path="/transactions" component={TransactionList} />

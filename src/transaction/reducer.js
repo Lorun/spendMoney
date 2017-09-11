@@ -28,6 +28,7 @@ const ACTION_HANDLERS = {
 const initialState = {
     list: {},
     lastId: 1000,
+    filter: 0
 };
 
 export default (state = initialState, action) => {

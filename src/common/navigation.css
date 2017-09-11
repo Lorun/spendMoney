@@ -27,6 +27,12 @@
 	color: #fff;
 	flex-basis: auto;
 }
+.navigation-btn--add span {
+    font-size: 2.5em;
+    font-weight: 300;
+    display: inline-block;
+    vertical-align: middle;
+}
 
 .navigation-btn.is-active {
 	color: #ff6b62;

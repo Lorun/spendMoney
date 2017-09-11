@@ -66,8 +66,8 @@ export class TransactionForm extends Component {
 
         if (values.amount !== 0) {
             this.isEditing
-                ? this.addTransaction(values)
-                : this.editTransaction(values);
+                ? this.editTransaction(values)
+                : this.addTransaction(values);
             this.props.history.push('/transactions');
         }
     }
@@ -89,6 +89,13 @@ export class TransactionForm extends Component {
                 ? 'transactionForm-amount--expenses'
                 : 'transactionForm-amount--income');
 
+        const categorySelect = categories.map(cat => (
+            <label key={cat.id} value={cat.id} className="transactionForm-catSelection">
+                <input type="radio" name="category" value={cat.id} onChange={this.handleChange} checked={this.state.category === cat.id} />
+                <span className="catSelection-label">{cat.name}</span>
+            </label>
+        ));
+
         return (
             <div className="transactionForm">
                 <form onSubmit={this.onSubmit}>
@@ -100,25 +107,28 @@ export class TransactionForm extends Component {
                         </label>
                         <label className="transactionForm-tab">
                             <input type="radio" name="transaction_type" value="2" onChange={this.handleChange} checked={this.state.transaction_type === 2} />
-                            <span className="tab-button tab-button--income">Income</span>
+                            <span className="tab-button tab-button--income">Incomes</span>
                         </label>
                     </div>
                     <div className={amountClassName}>
                         <input type="text" pattern="[0-9]*" name="amount" placeholder="0" value={this.state.amount} onChange={this.handleChange} />
                         <span className="transactionForm-currency">$</span>
                     </div>
-                    <div>
+                    <div className="transactionForm-description transactionForm-section">
                         <input type="text" name="description" placeholder="Description" value={this.state.description} onChange={this.handleChange} />
                     </div>
-                    <div>
+                    <div className="transactionForm-date transactionForm-section">
                         <input type="text" name="date" value={this.state.date} onChange={this.handleChange} />
                     </div>
-                    <div>
-                        <select name="category" onChange={this.handleChange} defaultValue={this.state.category}>
-                            {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
-                        </select>
+                    <div className="transactionForm-section transactionForm-categories">
+                        <div className="transactionForm-label">Category:</div>
+                        <div className="transactionForm-selectArea">
+                            {categorySelect}
+                        </div>
                     </div>
-                    <button type="submit" className="btn">{this.isEditing ? 'Edit' : 'Add'}</button>
+                    <div className="transactionForm-section transactionForm-section--white">
+                        <button type="submit" className="btn">{this.isEditing ? 'Edit' : 'Add'} Transaction</button>
+                    </div>
                 </form>
             </div>
         );
