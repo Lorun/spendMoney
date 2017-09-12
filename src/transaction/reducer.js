@@ -22,6 +22,10 @@ const ACTION_HANDLERS = {
     [t.INCREMENT_ID]: (state, action) => ({
         ...state,
         lastId: state.lastId + 1
+    }),
+    [t.SET_FILTER]: (state, action) => ({
+        ...state,
+        filter: action.filter
     })
 };
 

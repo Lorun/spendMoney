@@ -1,20 +1,18 @@
 import React, { Component } from 'react';
 import { Route, Router } from 'react-router';
-import createBrowserHistory from 'history/createBrowserHistory'
 
 import { TransactionList, TransactionForm } from './transaction';
 import { CategoryForm, CategoryList } from './category';
-import Header from './common/Header';
+//import Header from './common/Header';
 import Navigation from './common/Navigation';
 import './App.css';
 
-const history = createBrowserHistory();
 
 class App extends Component {
 
     render() {
         return (
-            <Router history={history}>
+            <Router history={this.props.history}>
                 <div className="common">
                     {/*<Header />*/}
 

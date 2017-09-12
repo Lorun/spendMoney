@@ -1,13 +1,18 @@
 import { createSelector } from 'reselect';
 
-const transactionsSelector = state => state.transaction.list;
+const transactionsSelector = state => state.transactions.list;
 
-const filterSelector = state => state.tranaction.filter;
+const filterSelector = state => state.transactions.filter;
 
 const getTransactions = (transactions, filter) => {
-    return Object.keys(transactions).filter(id => {
-        return filter === 0 ? true : transactions[id].transaction_type === filter;
+    let FilteredTransactions = [];
+    Object.keys(transactions).map(id => {
+        if (filter === 0 || transactions[id].transaction_type === filter) {
+            FilteredTransactions.push(transactions[id]);
+        }
+        return false;
     });
+    return FilteredTransactions;
 };
 
 export default createSelector(

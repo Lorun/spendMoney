@@ -1,39 +1,73 @@
-import React from 'react';
-import { createConnection } from '../../utils';
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import Transaction from './Transaction';
 import * as TransactionActions from '../actions';
-import FilteredTransactionList from '../selectors/filtered_transactions';
+import FilteredTransactionSelector from '../selectors/filtered_transactions';
 
+
+const setTransactionsFilter = (props) => {
+    const filter = props.params.filter ? +props.params.filter : 0;
+    props.setFilter(filter);
+};
+
+class FilterNav extends Component {
+
+
+    // componentWillReceiveProps(nextProps) {
+    //     if (nextProps.params.filter !== this.props.params.filter) {
+    //         setTransactionsFilter(nextProps);
+    //     } else {
+    //         return false;
+    //     }
+    // }
+
+    render() {
+        return(
+            <nav>
+                <NavLink to="/transactions">All</NavLink>
+                <NavLink to="/transactions/filter=1">Expenses</NavLink>
+                <NavLink to="/transactions/filter=2">Income</NavLink>
+            </nav>
+        );
+    }
+}
 
 // component part
 const TransactionList = (props) => {
     const { transactions, categories, remove } = props;
     let catListById = {};
-    categories.list.map((cat) => {
+    categories.map((cat) => {
         catListById[cat.id] = cat.name;
         return true;
     });
 
-    const items = Object.keys(transactions.list).map(id => {
-        let item = transactions.list[id];
+    console.log(props);
+
+    const items = Object.keys(transactions).map(id => {
+        let item = transactions[id];
         return (
             <Transaction key={item.id} item={item} actions={{ remove }} categories={catListById} />
         )
     });
 
-    return (
+    return(
         <div>
-            <nav>
-                <NavLink to="/transactions">All</NavLink>
-                <NavLink to="/transactions/filter=expenses">Expenses</NavLink>
-                <NavLink to="/transactions/filter=income">Income</NavLink>
-            </nav>
+            <FilterNav setFilter={props.setFilter} params={props.match.params} />
             {items}
         </div>
-    )
+    );
 };
 
 
 // container part
-export default createConnection(TransactionList, TransactionActions, ['transactions', 'categories']);
+const mapStateToProps = state => ({
+    transactions: FilteredTransactionSelector(state),
+    categories: [ ...state.categories.list ],
+    routing: state.routing
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators({...TransactionActions}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(TransactionList);

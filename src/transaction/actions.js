@@ -32,3 +32,8 @@ export const remove = id => ({
 export const incrementId = () => ({
     type: t.INCREMENT_ID
 });
+
+export const setFilter = filter => ({
+    type: t.SET_FILTER,
+    filter
+});
