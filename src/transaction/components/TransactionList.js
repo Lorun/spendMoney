@@ -1,38 +1,30 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 import Transaction from './Transaction';
 import * as TransactionActions from '../actions';
 import FilteredTransactionSelector from '../selectors/filtered_transactions';
 
 
-const setTransactionsFilter = (props) => {
-    const filter = props.params.filter ? +props.params.filter : 0;
-    props.setFilter(filter);
-};
-
 class FilterNav extends Component {
 
-
-    // componentWillReceiveProps(nextProps) {
-    //     if (nextProps.params.filter !== this.props.params.filter) {
-    //         setTransactionsFilter(nextProps);
-    //     } else {
-    //         return false;
-    //     }
-    // }
+    onSelect(filter) {
+        return () => {
+            this.props.setFilter(filter);
+        }
+    }
 
     render() {
         return(
             <nav>
-                <NavLink to="/transactions">All</NavLink>
-                <NavLink to="/transactions/filter=1">Expenses</NavLink>
-                <NavLink to="/transactions/filter=2">Income</NavLink>
+                <button onClick={this.onSelect(0)} className={this.props.filter === 0 ? 'is-active' : ''}>All</button>
+                <button onClick={this.onSelect(1)} className={this.props.filter === 1 ? 'is-active' : ''}>Expenses</button>
+                <button onClick={this.onSelect(2)} className={this.props.filter === 2 ? 'is-active' : ''}>Income</button>
             </nav>
         );
     }
 }
+
 
 // component part
 const TransactionList = (props) => {
@@ -43,8 +35,6 @@ const TransactionList = (props) => {
         return true;
     });
 
-    console.log(props);
-
     const items = Object.keys(transactions).map(id => {
         let item = transactions[id];
         return (
@@ -54,7 +44,7 @@ const TransactionList = (props) => {
 
     return(
         <div>
-            <FilterNav setFilter={props.setFilter} params={props.match.params} />
+            <FilterNav setFilter={props.setFilter} filter={props.filter} params={props.match.params} />
             {items}
         </div>
     );
@@ -64,8 +54,8 @@ const TransactionList = (props) => {
 // container part
 const mapStateToProps = state => ({
     transactions: FilteredTransactionSelector(state),
-    categories: [ ...state.categories.list ],
-    routing: state.routing
+    filter: state.transactions.filter,
+    categories: [ ...state.categories.list ]
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({...TransactionActions}, dispatch);
