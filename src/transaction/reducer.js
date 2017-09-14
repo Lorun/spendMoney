@@ -15,10 +15,15 @@ const ACTION_HANDLERS = {
             [action.payload.id]: action.payload
         }
     }),
-    [t.REMOVE]: (state, action) => ({
-        ...state,
-        list: state.list.filter(item => item.id !== action.id)
-    }),
+    [t.REMOVE]: (state, action) => {
+        let list = {...state.list};
+        delete list[action.id];
+
+        return {
+            ...state,
+            list
+        };
+    },
     [t.INCREMENT_ID]: (state, action) => ({
         ...state,
         lastId: state.lastId + 1
