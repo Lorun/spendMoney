@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Transaction from './Transaction';
 import * as TransactionActions from '../actions';
 import FilteredTransactionSelector from '../selectors/filtered_transactions';
+import getCategoriesById from '../selectors/categories';
 
 
 class FilterNav extends Component {
@@ -29,16 +30,11 @@ class FilterNav extends Component {
 // component part
 const TransactionList = (props) => {
     const { transactions, categories, remove } = props;
-    let catListById = {};
-    categories.map((cat) => {
-        catListById[cat.id] = cat.name;
-        return true;
-    });
 
     const items = Object.keys(transactions).map(id => {
         let item = transactions[id];
         return (
-            <Transaction key={item.id} item={item} actions={{ remove }} categories={catListById} />
+            <Transaction key={item.id} item={item} actions={{ remove }} categories={categories} />
         )
     });
 
@@ -55,7 +51,7 @@ const TransactionList = (props) => {
 const mapStateToProps = state => ({
     transactions: FilteredTransactionSelector(state),
     filter: state.transactions.filter,
-    categories: [ ...state.categories.list ]
+    categories: getCategoriesById(state)
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({...TransactionActions}, dispatch);
