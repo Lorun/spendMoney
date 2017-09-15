@@ -12,6 +12,8 @@ const getTransactions = (transactions, filter) => {
         }
         return false;
     });
+    FilteredTransactions.sort((prev, next) => prev.date < next.date);
+
     return FilteredTransactions;
 };
 

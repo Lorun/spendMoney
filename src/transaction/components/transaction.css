@@ -45,3 +45,20 @@
 .transaction-buttons .btn {
 	margin-left: 0.25em;
 }
+
+
+.transaction-filter {
+    display: flex;
+}
+.transaction-filter .btn {
+    flex-basis: 33.33%;
+    background-color: #fff;
+    border-bottom: 2px solid #eee;
+    border-radius: 0;
+    color: #6d6ff9;
+    line-height: 3em;
+    height: 3em;
+}
+.transaction-filter .btn.is-active {
+    border-color: #6d6ff9;
+}

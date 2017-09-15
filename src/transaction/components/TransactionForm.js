@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { createConnection } from '../../utils';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import * as TransactionActions from '../actions';
 
@@ -9,24 +10,36 @@ import './transactionForm.css';
 const cleanValue = (value) => ((isNaN(+value) || value === '') ? value : +value);
 
 /* Prepare initial values to fill the form */
-const prepareFormValues = (values) => ({
-    ...values,
-    date: moment(values.date, 'x').format('DD.MM.YYYY')
-});
+const prepareFormValues = (values) => {
+    const dateTime = moment(values.date, 'x');
+    return {
+        ...values,
+        date: dateTime.format('DD.MM.YYYY'),
+        time: dateTime.format('HH:mm:ss')
+    };
+};
 
-const preparePuttingValues = (values) => ({
-    ...values,
-    date: moment(values.date, 'DD.MM.YYYY').format('x')
-});
+const preparePuttingValues = (values) => {
+    const date = moment(values.date + ' ' + values.time, 'DD.MM.YYYY HH:mm:ss').format('x');
+    delete values.time;
+    return {
+        ...values,
+        date
+    };
+};
 
-const initialFormValues = (id) => ({
-    id,
-    transaction_type: 1,
-    amount: 0,
-    date: moment().format('DD.MM.YYYY'),
-    category: 1,
-    description: ''
-});
+const initialFormValues = (id, filter) => {
+    const dateTime = moment();
+    return {
+        id,
+        transaction_type: filter === 0 ? 1 : filter,
+        amount: 0,
+        date: dateTime.format('DD.MM.YYYY'),
+        time: dateTime.format('HH:mm:ss'),
+        category: 1,
+        description: ''
+    };
+};
 
 export class TransactionForm extends Component {
 
@@ -37,6 +50,7 @@ export class TransactionForm extends Component {
         this.state = this.getInitialState();
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleChangeType = this.handleChangeType.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
 
@@ -47,7 +61,7 @@ export class TransactionForm extends Component {
 
         return this.isEditing
             ? prepareFormValues(this.props.transactions.list[currentId])
-            : initialFormValues(currentId);
+            : initialFormValues(currentId, this.props.transactions.filter);
     }
 
     handleChange(event) {
@@ -58,6 +72,17 @@ export class TransactionForm extends Component {
                 [target.name]: cleanValue(target.value)
             }));
         }
+    }
+
+    handleChangeType(event) {
+        const target = event.target;
+        const transaction_type = cleanValue(target.value);
+
+        this.setState(prevState => ({
+            transaction_type
+        }));
+
+        this.props.setFilter(transaction_type);
     }
 
     onSubmit(e){
@@ -83,13 +108,12 @@ export class TransactionForm extends Component {
     }
 
     render() {
-        const categories = this.props.categories.list;
         let amountClassName = 'transactionForm-amount '
             + (this.state.transaction_type === 1
                 ? 'transactionForm-amount--expenses'
                 : 'transactionForm-amount--income');
 
-        const categorySelect = categories.map(cat => (
+        const categorySelect = this.props.categories.map(cat => (
             <label key={cat.id} value={cat.id} className="transactionForm-catSelection">
                 <input type="radio" name="category" value={cat.id} onChange={this.handleChange} checked={this.state.category === cat.id} />
                 <span className="catSelection-label">{cat.name}</span>
@@ -102,11 +126,11 @@ export class TransactionForm extends Component {
                     <input type="hidden" name="id" value={this.state.id} />
                     <div className="transactionForm-types">
                         <label className="transactionForm-tab">
-                            <input type="radio" name="transaction_type" value="1" onChange={this.handleChange} checked={this.state.transaction_type === 1} />
+                            <input type="radio" name="transaction_type" value="1" onChange={this.handleChangeType} checked={this.state.transaction_type === 1} />
                             <span className="tab-button tab-button--expenses">Expenses</span>
                         </label>
                         <label className="transactionForm-tab">
-                            <input type="radio" name="transaction_type" value="2" onChange={this.handleChange} checked={this.state.transaction_type === 2} />
+                            <input type="radio" name="transaction_type" value="2" onChange={this.handleChangeType} checked={this.state.transaction_type === 2} />
                             <span className="tab-button tab-button--income">Incomes</span>
                         </label>
                     </div>
@@ -119,6 +143,7 @@ export class TransactionForm extends Component {
                     </div>
                     <div className="transactionForm-date transactionForm-section">
                         <input type="text" name="date" value={this.state.date} onChange={this.handleChange} />
+                        <input type="hidden" name="time" value={this.state.time} />
                     </div>
                     <div className="transactionForm-section transactionForm-categories">
                         <div className="transactionForm-label">Category:</div>
@@ -135,4 +160,11 @@ export class TransactionForm extends Component {
     }
 }
 
-export default createConnection(TransactionForm, TransactionActions, ['transactions', 'categories']);
+const mapStateToProps = state => ({
+    transactions: state.transactions,
+    categories: state.categories.list
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators({...TransactionActions}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(TransactionForm);

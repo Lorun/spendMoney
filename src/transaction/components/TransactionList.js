@@ -15,12 +15,16 @@ class FilterNav extends Component {
         }
     }
 
+    getClassName(filter) {
+        return 'btn ' + (this.props.filter === filter ? 'is-active' : '');
+    }
+
     render() {
         return(
-            <nav>
-                <button onClick={this.onSelect(0)} className={this.props.filter === 0 ? 'is-active' : ''}>All</button>
-                <button onClick={this.onSelect(1)} className={this.props.filter === 1 ? 'is-active' : ''}>Expenses</button>
-                <button onClick={this.onSelect(2)} className={this.props.filter === 2 ? 'is-active' : ''}>Income</button>
+            <nav className="transaction-filter">
+                <button onClick={this.onSelect(0)} className={this.getClassName(0)}>All</button>
+                <button onClick={this.onSelect(1)} className={this.getClassName(1)}>Expenses</button>
+                <button onClick={this.onSelect(2)} className={this.getClassName(2)}>Income</button>
             </nav>
         );
     }
